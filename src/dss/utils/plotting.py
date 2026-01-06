@@ -67,7 +67,7 @@ def plot_network(
     if node_size is not None:
         sizes_raw = np.array([node_size.get(n, 1.0) for n in G.nodes()], dtype=float)
         if sizes_raw.max() > 0:
-            sizes = 200.0 * (sizes_raw / sizes_raw.max())
+            sizes = 300.0 * (sizes_raw / sizes_raw.max())
         else:
             sizes = np.full_like(sizes_raw, 100.0)
     else:
@@ -123,9 +123,10 @@ def plot_network(
         for idx, n in enumerate(G.nodes()):
             x, y = pos[n]
             # Scale font size: base of 6 plus up to 6 additional points
-            fs = 6 + 6 * (sizes_raw[idx] / max_raw)
+            # fs = 6 + 6 * (sizes_raw[idx] / max_raw)
+            fs = 5 + 4 * (sizes_raw[idx] / max_raw)
             label = label_dict[n] if (label_dict is not None and n in label_dict) else str(n)
-            ax.text(x, y, label, fontsize=fs, ha='center', va='center', color='black')
+            ax.text(x, y, label, fontsize=fs, ha='center', va='center', color='red',bbox=dict(facecolor="white", alpha=0.6, edgecolor="none", pad=0.5)) #color='black')
     # Set title if provided
     if title:
         ax.set_title(title)
