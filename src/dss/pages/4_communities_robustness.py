@@ -12,6 +12,7 @@ from dss.analytics.roles import compute_roles
 
 
 def page() -> None:
+    import pandas as pd
     st.set_page_config(page_title="Communities & Robustness", layout="wide")
     st.title("Community Detection and Robustness")
     init_state()
