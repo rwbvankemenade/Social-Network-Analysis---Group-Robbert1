@@ -34,8 +34,14 @@ def page() -> None:
         # Plot the history of Kemeny values as nodes are removed sequentially
         st.subheader("Kemeny constant after each removal")
         fig, ax = plt.subplots()
-        x_vals = list(range(1, len(result.history) + 1))
-        ax.plot(x_vals, result.history, marker="o")
+        # x_vals = list(range(1, len(result.history) + 1))
+        # ax.plot(x_vals, result.history, marker="o")
+        # Include baseline as starting point
+        kemeny_series = [base_k] + result.history
+        x_vals = list(range(0, len(kemeny_series)))
+        
+        ax.plot(x_vals, kemeny_series, marker="o")
+        # ax.axvline(0, linestyle="--", linewidth=1)
         ax.set_xlabel("Number of removed nodes")
         ax.set_ylabel("Kemeny constant")
         ax.set_title("Kemeny constant versus number of removed nodes")
