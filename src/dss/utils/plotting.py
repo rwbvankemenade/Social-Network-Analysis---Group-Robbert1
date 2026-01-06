@@ -109,7 +109,7 @@ def plot_network(
             cmap=cmap,
             vmin=vmin,
             vmax=vmax,
-            edgecolors="#b22222",
+            edgecolors="red",
             linewidths=2,
             ax=ax,
         )
