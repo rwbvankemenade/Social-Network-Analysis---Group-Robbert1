@@ -5,7 +5,7 @@ the page code concise.  Components include network visualisation,
 tables, metrics cards and charts.
 """
 
-from typing import Any, Iterable, Dict, Optional
+from typing import Any, Dict, Iterable, Optional, Tuple
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -61,11 +61,6 @@ from ..graph.layouts import compute_layout
 #     )
 #     st.pyplot(fig)
 
-from typing import Any, Dict, Iterable, Optional, Tuple, List
-
-import networkx as nx
-import streamlit as st
-
 
 def display_network(
     G,
@@ -97,17 +92,15 @@ def display_network(
         Custom labels for nodes; defaults to node identifiers.
     removed_edges: iterable of (u, v), optional
         Edges to overlay as visually "removed" (drawn as dashed red lines).
-        This is useful when you want to keep the overall structure visible,
-        while clearly indicating which connections were removed.
+        Useful when you want to keep the overall structure visible while
+        clearly indicating which connections were removed.
     """
     if G is None or G.number_of_nodes() == 0:
         st.info("No graph loaded.")
         return
-
     # Compute a deterministic layout. For interactive use the layout is
     # cached across calls, but caching is disabled in this simplified version.
     pos = compute_layout(G)
-
     fig = plot_network(
         G,
         pos,
@@ -117,32 +110,10 @@ def display_network(
         title=title,
         show_labels=show_labels,
         label_dict=label_dict,
+        removed_edges=removed_edges,
     )
-
-    # Overlay removed edges as dashed red lines on the same axes so the user
-    # sees the full graph while the removed connections remain visible.
-    if removed_edges:
-        ax = fig.axes[0] if fig.axes else None
-        if ax is not None:
-            dashed: List[Tuple[Any, Any]] = list(removed_edges)
-
-            # For undirected graphs, accept either orientation.
-            if not G.is_directed():
-                s = set(dashed)
-                s |= {(v, u) for (u, v) in s}
-                dashed = list(s)
-
-            nx.draw_networkx_edges(
-                G,
-                pos,
-                edgelist=dashed,
-                ax=ax,
-                edge_color="red",
-                style="dashed",
-                width=2.5,
-            )
-
     st.pyplot(fig)
+
 
 
 
