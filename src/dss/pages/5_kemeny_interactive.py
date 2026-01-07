@@ -264,7 +264,6 @@
 
 
 #========================================================================================
-# --- src/dss/pages/5_kemeny_interactive.py (UPDATED) ---
 # File: src/dss/pages/5_kemeny_interactive.py
 """Streamlit page: Kemeny constant analysis with interactive EDGE removal."""
 
@@ -343,12 +342,22 @@ def page() -> None:
     label_to_edge = _build_label_to_edge(G)
     all_labels = list(label_to_edge.keys())
 
-    selected = st.multiselect(
+    # --- FIX: separate "state" from widget key ---
+    if "kemeny_edge_selected_state" not in st.session_state:
+        st.session_state["kemeny_edge_selected_state"] = []
+    if "kemeny_edge_selected_widget" not in st.session_state:
+        st.session_state["kemeny_edge_selected_widget"] = list(st.session_state["kemeny_edge_selected_state"])
+
+    selected_widget = st.multiselect(
         "Select edges to remove",
         options=all_labels,
-        default=st.session_state.get("kemeny_edge_selected", []),
-        key="kemeny_edge_selected",
+        default=st.session_state["kemeny_edge_selected_state"],
+        key="kemeny_edge_selected_widget",
     )
+
+    # persist widget -> state
+    st.session_state["kemeny_edge_selected_state"] = list(selected_widget)
+    selected = list(selected_widget)
 
     order = _sync_order(selected, label_to_edge)
 
@@ -390,8 +399,14 @@ def page() -> None:
                 st.rerun()
 
         if st.button("Remove", use_container_width=True):
+            # Update order
             st.session_state["kemeny_edge_order"] = [lbl for lbl in order if lbl != active]
-            st.session_state["kemeny_edge_selected"] = [lbl for lbl in selected if lbl != active]
+
+            # Update selection state (NOT the widget key)
+            st.session_state["kemeny_edge_selected_state"] = [lbl for lbl in selected if lbl != active]
+
+            # Also update widget value BEFORE rerun (allowed: next run re-instantiates)
+            st.session_state["kemeny_edge_selected_widget"] = list(st.session_state["kemeny_edge_selected_state"])
 
             new_order = st.session_state["kemeny_edge_order"]
             if new_order:
