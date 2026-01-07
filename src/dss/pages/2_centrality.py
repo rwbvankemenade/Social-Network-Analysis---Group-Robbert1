@@ -43,7 +43,7 @@ def page() -> None:
             combined = combine_centralities(df, weights=weight_inputs)
     else:
         for col in df.columns:
-            weight_inputs[col] = st.toggle(label=str(col))
+            weight_inputs[col] = st.sidebar.toggle(label=str(col))
         combined = borda_count(df)
     
     # Display centrality table
