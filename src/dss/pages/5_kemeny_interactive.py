@@ -454,7 +454,7 @@ def page() -> None:
         ignore_index=True,
     )
 
-    col_a, col_b, _ = st.columns([1, 1, 3])
+    col_a, col_b, col_graph  = st.columns([1, 1, 3])
 
     with col_a:
         st.dataframe(order_df, use_container_width=True, hide_index=True)
@@ -472,6 +472,26 @@ def page() -> None:
             st.button("Down", use_container_width=True, on_click=_move_active, args=(+1,))
 
         st.button("Remove", use_container_width=True, on_click=_remove_active_edge)
+    
+    with col_graph:
+                st.markdown("### Network view (after removing edges)")
+                H = G.copy()
+                for u, v in ordered_edges:
+                    if H.has_edge(u, v):
+                        H.remove_edge(u, v)
+                    elif (not H.is_directed()) and H.has_edge(v, u):
+                        H.remove_edge(v, u)
+        
+                display_network(
+                    H,
+                    node_size=None,
+                    node_color=None,
+                    highlight=[],
+                    title="Graph after edge removals",
+                    show_labels=True,
+                    removed_edges=ordered_edges,
+                )
+
 
 
 if __name__ == "__main__":
