@@ -364,7 +364,7 @@ def page() -> None:
         ignore_index=True,
     )
 
-    col_a, col_b = st.columns([1, 1])
+    col_a, col_b, _ = st.columns([1, 1, 3])
     with col_a:
         st.dataframe(order_df, use_container_width=True, hide_index=True)
 
