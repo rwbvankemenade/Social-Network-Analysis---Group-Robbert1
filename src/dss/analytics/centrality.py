@@ -82,6 +82,7 @@ def compute_centralities(G: nx.Graph) -> pd.DataFrame:
     df = pd.DataFrame(
         {
             "degree": pd.Series(deg),
+            "# links": pd.Series((deg*len(G.nodes)).astype(int)), #####
             "katz": pd.Series(katz),
             "eigenvector": pd.Series(eigen),
             "betweenness": pd.Series(between),
