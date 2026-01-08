@@ -209,7 +209,7 @@ def page() -> None:
         st.markdown("### Kemeny constants")
         st.metric("Kemeny constant (baseline)", f"{base_k:.3f}")
 
-        if kemeny_defined
+        if kemeny_defined:
             if selected_widget:
                     st.metric(
                         "Kemeny constant (after removals)",
