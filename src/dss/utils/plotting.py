@@ -238,22 +238,44 @@ def plot_network(
     # Draw edges (base)
     nx.draw_networkx_edges(G, pos, alpha=0.5, ax=ax)
     # Overlay removed edges as dashed red (drawn on top)
+    # if removed_edges:
+    #     dashed: List[Tuple[Any, Any]] = list(removed_edges)
+    #     if not G.is_directed():
+    #         s = set(dashed)
+    #         s |= {(v, u) for (u, v) in s}
+    #         dashed = list(s)
+    #     nx.draw_networkx_edges(
+    #         G,
+    #         pos,
+    #         edgelist=dashed,
+    #         ax=ax,
+    #         edge_color="red",
+    #         # style="dashed",
+    #         width=0.8,
+    #         alpha=1,
+    #         style=(0, (2, 6)),
+    #     )
+
     if removed_edges:
-        dashed: List[Tuple[Any, Any]] = list(removed_edges)
-        if not G.is_directed():
-            s = set(dashed)
-            s |= {(v, u) for (u, v) in s}
-            dashed = list(s)
+    for u, v in removed_edges:
+        if not G.has_edge(u, v) and not G.has_edge(v, u):
+            continue
+
+        L = edge_length(u, v, pos)
+
+        # schaalfactoren (hier kun je tunen)
+        dash_on  = max(1.0, 0.08 * L)
+        dash_off = max(3.0, 0.25 * L)
+
         nx.draw_networkx_edges(
             G,
             pos,
-            edgelist=dashed,
+            edgelist=[(u, v)],
             ax=ax,
             edge_color="red",
-            # style="dashed",
             width=0.8,
             alpha=1,
-            style=(0, (2, 6)),
+            style=(0, (dash_on, dash_off)),
         )
     # Labels
     if show_labels:
